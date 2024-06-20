@@ -1,0 +1,92 @@
+{
+    "clangd.path": "~/.config/coc/extensions/coc-clangd-data/install/17.0.3/clangd_17.0.3/bin/clangd",
+    "clangd.enabled": true,
+    /*"clangd.disableDiagnostics": true, */
+    "clangd.arguments": ["--background-index=true",
+		"--header-insertion=never",
+		"-clang-tidy=false",
+        "-clang-tidy-checks=*"],
+    /*"clangd.disableSnippetCompletion": true,*/
+	"inlayHint.enable": true,
+	"inlayHint.display": false,
+	"inlayHint.enableParameter": true,
+
+    "diagnostic.showUnused": false,
+    "diagnostic.refreshOnInsertMode": false,
+    "diagnostic.enableSign": false,
+    "diagnostic.signLevel":"warning",
+	"diagnostic.hintSign": ">>",
+
+    /*
+    "diagnostic.checkCurrentLine": false,
+    "diagnostic.refreshOnSelectMode": false,
+    */
+
+    /*["*"] for all filetypes */
+    // "semanticTokens.filetypes":["*"],
+    "semanticTokens.enable": true,
+    /*"semanticTokens.filetypes":["cpp", "c"], */
+    /* "colors.filetypes": ["*"], */
+    "colors.enable": true,
+    "list.previewSplitRight": true,
+    /*"coc.preferences.jumpCommand": "vsplit", */
+
+	// https://github.com/fannheyward/coc-pyright/issues/348
+	// https://github.com/microsoft/pyright/issues/1542
+    "python.analysis.diagnosticSeverityOverrides": {"reportGeneralTypeIssues": "none",
+		"reportOptionalMemberAccess": "none", "reportInvalidStringEscapeSequence": "none"},
+    // https://github.com/fannheyward/coc-pyright/issues/163
+    "python.analysis.useLibraryCodeForTypes": true,
+	"python.analysis.typeCheckingMode": "off",
+	"python.venvPath": "/home/harvey/anaconda3/envs/",
+    "markdownlint.config":
+    {
+        "default": true
+    },
+
+    "json.enable": true,
+    /* "json.validate.enable": true, */
+    "json.trace.server": "messages",
+
+    "xml.java.home": "/usr",
+    "xml.validation.noGrammar":"ignore",
+
+    // "yaml.enable": true,
+    // "yaml.schemaStore.enable": true,
+    // "yaml.schemaStore.url": "https://www.schemastore.org/api/json/catalog.json",
+    /* "yaml.schemas": { */
+    /*       "https://gist.githubusercontent.com/simnalamburt/2c3263b783ed3f4471bda9ca901bb69f/raw/9c2cd17d6f4683cf80b6360a2d53b33fd49556d7/allow-all-json-schema.json": "/*" */
+    /**/
+    /* }, */
+
+    "languageserver":
+    {
+		// "clangd":
+		// {
+		// 	"command": "clangd-12",
+		// 	"rootPatterns": ["compile_flags.txt", "compile_commands.json"],
+		// 	"filetypes": ["c", "cc", "cpp", "cu", "c++", "objc", "objcpp"]
+		// },
+
+        "jsonfile":
+        {
+            "command": "vscode-json-languageserver",
+            "filetypes": ["jsonfile"]
+        },
+        "dockerfile":
+        {
+            "command": "docker-langserver",
+            "filetypes": ["dockerfile"],
+            "args": ["--stdio"]
+        }
+        /* "efm": */
+        /* { */
+        /*     "command": "efm-langserver", */
+        /*     "args": ["-c", "/home/uisee/.config/efm-langserver/config.yaml"], */
+        /*     // custom config path */
+        /*     /* "args": ["-c", "/path/to/your/config.yaml"], */
+        /*     "filetypes": ["vim", "markdown"] */
+        /* } */
+    },
+    "snippets.ultisnips.pythonPrompt": false
+}

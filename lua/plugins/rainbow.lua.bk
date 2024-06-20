@@ -1,0 +1,21 @@
+return {
+	{
+		'luochen1990/rainbow',
+		vim.cmd([[
+			" -- rainbow for highlighting matching brackets -- "
+			" https://vi.stackexchange.com/questions/14803/cmake-syntax-highlighting-not-working-as-expected
+			let g:rainbow_active = 1 "set to 0 if you want to enable it later via :RainbowToggle
+			let g:rainbow_conf = {
+			\	'guifgs': ['royalblue3', 'darkorange3', 'seagreen3', 'firebrick'],
+			\	'ctermfgs': ['lightblue', 'lightyellow', 'lightcyan', 'lightmagenta'],
+			\	'guis': [''],
+			\	'cterms': [''],
+			\	'operators': '_,_',
+			\	'parentheses': ['start=/(/ end=/)/ fold', 'start=/\[/ end=/\]/ fold', 'start=/{/ end=/}/ fold'],
+			\   'separately': {
+			\       'cmake': 0,
+			\   }
+			\ }
+		]])
+    }
+}
