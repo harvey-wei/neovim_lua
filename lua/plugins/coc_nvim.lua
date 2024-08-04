@@ -75,8 +75,8 @@ local coc_config = function()
 
 
 	-- Formatting selected code
-	keyset("x", "<leader>f", "<Plug>(coc-format-selected)", {silent = true})
-	keyset("n", "<leader>f", "<Plug>(coc-format-selected)", {silent = true})
+	-- keyset("x", "<space>f", "<Plug>(coc-format-selected)", {silent = true})
+	-- keyset("n", "<space>f", "<Plug>(coc-format-selected)", {silent = true})
 
 
 	-- Setup formatexpr specified filetype(s)
@@ -183,6 +183,14 @@ local coc_config = function()
 	-- Resume latest coc list
 	keyset("n", "<space>p", ":<C-u>CocListResume<cr>", opts)
 
+	-- Set space f to ::CocSearch and wait for argument
+	keyset("n", "<space>f", ":CocSearch ", opts)
+
+	-- convert the following to lua syntax
+	-- nnoremap <silent> <Leader>cf :exe 'CocSearch '.expand('<cword>')<CR>
+	keyset("n", "<space>cf", ":exe 'CocSearch '.expand('<cword>')<CR>", opts)
+
+
 	vim.cmd([[
 		" -- setting from coc.vim github  --"
 		" Note you can add extension names to the g:coc_global_extensions variable,
@@ -213,6 +221,8 @@ local coc_config = function()
 		au ModeChanged *:i :let b:coc_diagnostic_disable = 1 | call CocActionAsync('diagnosticRefresh')
 		au ModeChanged *:n :let b:coc_diagnostic_disable = 0 | call CocActionAsync('diagnosticRefresh')
 		au ModeChanged n:n :let b:coc_diagnostic_disable = 0 | call CocActionAsync('diagnosticRefresh')
+
+		" nnoremap <silent> <Leader>cf :exe 'CocSearch '.expand('<cword>')<CR>
 
 		augroup cudaTocpp
 			autocmd! FileType cu set filetype=cpp autoread

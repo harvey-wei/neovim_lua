@@ -8,7 +8,10 @@ return
         -- Create your mappings here
 	local NS = { noremap = true, silent = true }
 
-	-- Aligns to 1 character
+	a =   10
+	bdf = 11
+
+	-- Aligns to 1 character x indicates visual mode (includes visual line and visual block)
 	vim.keymap.set(
 		'x',
 		'aa',
