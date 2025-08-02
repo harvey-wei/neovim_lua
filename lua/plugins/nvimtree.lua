@@ -6,12 +6,29 @@ local nvim_tree_config = function()
 	-- optionally enable 24-bit colour
 	vim.opt.termguicolors = true
 
-	-- empty setup using defaults
-	require("nvim-tree").setup
-	{
-		-- sync_root_with_cwd = true,
-		respect_buf_cwd = true,
-	}
+	require("nvim-tree").setup({
+	  sort = {
+		sorter = "case_sensitive",
+	  },
+	  view = {
+		width = 30,
+	  },
+	  renderer = {
+		group_empty = true,
+	  },
+	  filters = {
+		dotfiles = true,
+	  },
+	})
+
+
+	-- -- empty setup using defaults
+	-- require("nvim-tree").setup
+	-- {
+	-- 	-- sync_root_with_cwd = true,
+	-- 	respect_buf_cwd = true,
+	-- }
+
 	-- A for alt, open or close the nvimtree
 	vim.keymap.set('', '<leader>m', ':NvimTreeToggle<CR>', opt)
 	vim.keymap.set('', '<leader>bm', ':NvimTreeFocus<CR>', opt)
