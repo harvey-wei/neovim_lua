@@ -44,6 +44,29 @@ function  M.setup()
 		" set cursorline
 	]])
 
+
+	vim.cmd([[
+		filetype plugin indent on
+	]])
+
+	-- vim.diagnostic.enable()
+
+
+	-- vim.opt.showtabline = 2 -- Always show tabline
+
+
+	-- set folding
+
+	vim.o.fillchars = 'eob: ,fold: ,foldopen:,foldsep: ,foldclose:'
+	vim.o.foldcolumn = '1'
+
+	vim.o.foldmethod = 'expr'
+	vim.o.foldexpr = 'v:lua.vim.lsp.foldexpr()'
+
+	vim.o.foldenable = false        -- 🔴 This disables folding on open
+	vim.o.foldlevel = 99
+	vim.o.foldlevelstart = 99
+
 end
 
 return M

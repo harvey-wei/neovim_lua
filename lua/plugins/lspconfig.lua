@@ -14,7 +14,13 @@ return
 	},
 	{ "mason-org/mason-lspconfig.nvim",
 		opts = {
-			ensure_installed = { "lua_ls", "clangd" , "pyright"},
+			ensure_installed = {
+				"lua_ls",
+				"clangd",
+				"pylsp",
+				-- "debugpy"
+				-- "shfmt"
+			},
 		},
 		dependencies = {
 			{ "mason-org/mason.nvim", opts = {} },
@@ -23,43 +29,99 @@ return
 	},
 	{
 		"neovim/nvim-lspconfig",
+		-- This ensures LSP setup runs before a buffer is fully read.
+		event = {"BufReadPre", "BufNewFile"},
+
 		config = function()
-		  local lspconfig = require("lspconfig")
+			local lspconfig = require("lspconfig")
 
-		  -- Optional: shared on_attach and capabilities
+			-- Optional: shared on_attach and capabilities
+			local on_attach = function(_, bufnr)
+				local map = function(mode, lhs, rhs, desc)
+					vim.keymap.set(mode, lhs, rhs, { buffer = bufnr, desc = desc })
+				end
 
-		  local on_attach = function(_, bufnr)
-			local map = function(mode, lhs, rhs, desc)
-			  vim.keymap.set(mode, lhs, rhs, { buffer = bufnr, desc = desc })
+			-- local wk = require("which-key")
+			-- local opts = { buffer = bufnr, silent = true }
+
+			-- === WHICH-KEY GROUPS (buffer-local) ===
+			-- ✅ NEW (recommended)
+			-- require("which-key").register({
+			--   { "<leader>d", group = "Diagnostics", buffer = bufnr },
+			--   { "g", group = "LSP", buffer = bufnr },
+			-- })
+
+-- These GLOBAL keymaps are created unconditionally when Nvim starts:
+-- - "grn" is mapped in Normal mode to |vim.lsp.buf.rename()|
+-- - "gra" is mapped in Normal and Visual mode to |vim.lsp.buf.code_action()|
+-- - "grr" is mapped in Normal mode to |vim.lsp.buf.references()|
+-- - "gri" is mapped in Normal mode to |vim.lsp.buf.implementation()|
+-- - "grt" is mapped in Normal mode to |vim.lsp.buf.type_definition()|
+-- - "gO" is mapped in Normal mode to |vim.lsp.buf.document_symbol()|
+-- - CTRL-S is mapped in Insert mode to |vim.lsp.buf.signature_help()|
+
+				  -- === LSP keymaps ===
+				map("n", "gd", vim.lsp.buf.definition, "Go to Definition")
+				map("n", "gt", vim.lsp.buf.type_definition, "Go to Type Definition")
+				map("n", "gr", vim.lsp.buf.references, "Go to References")
+				map("n", "gi", vim.lsp.buf.implementation, "Go to Implementation")
+				map("n", "grn", vim.lsp.buf.rename, "Rename")
+				map("n", "gra", vim.lsp.buf.code_action, "Code Action")
+				map("n", "K", vim.lsp.buf.hover, "Hover")
+
+				  -- === Diagnostics keymaps ===
+
+
+				-- Diagnostics keymaps using vim.keymap.set
+				vim.keymap.set("n", "<leader>do", vim.diagnostic.open_float, {
+				  desc = "Open Diagnostic Float",
+				  silent = true,
+				})
+
+				vim.keymap.set("n", "<leader>d[", vim.diagnostic.goto_prev, {
+				  desc = "Go to Previous Diagnostic",
+				  silent = true,
+				})
+
+				vim.keymap.set("n", "<leader>d]", vim.diagnostic.goto_next, {
+				  desc = "Go to Next Diagnostic",
+				  silent = true,
+				})
+
+				-- Telescope integration (requires Telescope + Plenary + optional Devicons)
+				vim.keymap.set("n", "<leader>dd", "<cmd>Telescope diagnostics<CR>", {
+				  desc = "Telescope Diagnostics",
+				  silent = true,
+				})
+
+
+				-- https://smarttech101.com/nvim-lsp-diagnostics-keybindings-signs-virtual-texts
+				-- vim.api.nvim_set_keymap('n', '<leader>xo', '<cmd>lua vim.diagnostic.open_float()<CR>', { noremap = true, silent = true })
+				-- vim.api.nvim_set_keymap('n', '<leader>x[', '<cmd>lua vim.diagnostic.goto_prev()<CR>', { noremap = true, silent = true })
+				-- vim.api.nvim_set_keymap('n', '<leader>x]', '<cmd>lua vim.diagnostic.goto_next()<CR>', { noremap = true, silent = true })
+
+				-- The following command requires plug-ins "nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim", and optionally "kyazdani42/nvim-web-devicons" for icon support
+				-- vim.api.nvim_set_keymap('n', '<leader>xd', '<cmd>Telescope diagnostics<CR>', { noremap = true, silent = true })
+				-- If you don't want to use the telescope plug-in but still want to see all the errors/warnings, comment out the telescope line and uncomment this:
+
 			end
 
-			map("n", "gd", vim.lsp.buf.definition, "Go to definition")
-			map("n", "K", vim.lsp.buf.hover, "Hover")
-			map("n", "gr", vim.lsp.buf.references, "References")
-			map("n", "<leader>rn", vim.lsp.buf.rename, "Rename")
-			map("n", "<leader>ca", vim.lsp.buf.code_action, "Code Action")
+			lspconfig.lua_ls.setup({on_attach = on_attach})
+			-- lspconfig.lua_ls.setup({})
+			lspconfig.pylsp.setup({
+				on_attach = on_attach,
+				-- root_dir = function(fname)
+				-- 	return vim.fn.getcwd()  -- fallback to current directory
+				-- end,
+				-- cmd = {'/Users/harvey/.local/share/nvim/mason/packages/python-lsp-server/venv/bin/pylsp'},
+			})
 
 
-			-- https://smarttech101.com/nvim-lsp-diagnostics-keybindings-signs-virtual-texts
-			vim.api.nvim_set_keymap('n', '<leader>do', '<cmd>lua vim.diagnostic.open_float()<CR>', { noremap = true, silent = true })
-			vim.api.nvim_set_keymap('n', '<leader>d[', '<cmd>lua vim.diagnostic.goto_prev()<CR>', { noremap = true, silent = true })
-			vim.api.nvim_set_keymap('n', '<leader>d]', '<cmd>lua vim.diagnostic.goto_next()<CR>', { noremap = true, silent = true })
-			-- The following command requires plug-ins "nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim", and optionally "kyazdani42/nvim-web-devicons" for icon support
-			vim.api.nvim_set_keymap('n', '<leader>dd', '<cmd>Telescope diagnostics<CR>', { noremap = true, silent = true })
-			-- If you don't want to use the telescope plug-in but still want to see all the errors/warnings, comment out the telescope line and uncomment this:
-			-- vim.api.nvim_set_keymap('n', '<leader>dd', '<cmd>lua vim.diagnostic.setloclist()<CR>', { noremap = true, silent = true })
+			lspconfig.clangd.setup({
+			  on_attach = on_attach,
+			})
 
-
-		  end
-
-		  lspconfig.lua_ls.setup({on_attach = on_attach})
-		  -- lspconfig.pylsp.setup({on_attach = on_attach})
-		  lspconfig.pyright.setup({on_attach = on_attach})
-		  lspconfig.clangd.setup({
-			  on_attach= on_attach,
-			  cmd = { 'clangd', '--compile-commands-dir=build'},
-			  filetypes = { 'c', 'cc','cpp', 'objc', 'objcpp', 'cuda' },
-		  })
+			lspconfig.clangd.filetypes = { "c", "cc", "cpp", "objc", "objcpp", "cuda" }
 
 		end,
 	},
@@ -96,6 +158,7 @@ return
 			['<C-space>'] = { 'show', 'show_documentation', 'hide_documentation' },
 			['<C-e>'] = { 'hide', 'fallback' },
 
+			-- ['<Tab>'] or ['<C-y>']
 			['<Tab>'] = {
 			  function(cmp)
 				if cmp.snippet_active() then return cmp.accept()

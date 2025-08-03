@@ -46,6 +46,19 @@ return
 				inc_rename = false, -- enables an input dialog for inc-rename.nvim
 				lsp_doc_border = false, -- add a border to hover docs and signature help
 			  },
+
+				-- Block which-key warning messages
+			routes = {
+			  {
+				view = "notify", -- optional, can be "mini", "split", etc.
+				filter = {
+				  event = "notify",
+				  -- kind = "warn", -- string, not vim.log.levels.WARN
+				  find = "which-key",
+				},
+				opts = { skip = true },
+			  },
+			}
 			})
 		end
 	}
