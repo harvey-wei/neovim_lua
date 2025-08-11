@@ -1,5 +1,3 @@
-# Fig pre block. Keep at the top of this file.
-[[ -f "$HOME/.fig/shell/zshrc.pre.zsh" ]] && builtin source "$HOME/.fig/shell/zshrc.pre.zsh"
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
@@ -8,18 +6,17 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
 fi
 
 # If you come from bash you might have to change your $PATH.
-# export PATH=$HOME/bin:/usr/local/bin:$PATH
+# export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
 
-# Path to your oh-my-zsh installation.
+# Path to your Oh My Zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 
 # Set name of the theme to load --- if set to "random", it will
-# load a random theme each time oh-my-zsh is loaded, in which case,
+# load a random theme each time Oh My Zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
+# ZSH_THEME="robbyrussell"
 ZSH_THEME="powerlevel10k/powerlevel10k"
-# ZSH_THEME="gruvbox"
-# SOLARIZED_THEME="dark"
 
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
@@ -82,21 +79,14 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
-    git
+	git
     zsh-autosuggestions
     zsh-syntax-highlighting
-    k
-    zsh-exa
     zsh-peco-history
+	zsh-eza
+    k
 	z
 )
-# zsh-syntax-highlighting and remove the cursor highlighting
-# cursor disappear https://github.com/zsh-users/zsh-syntax-highlighting/issues/171
-ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern regexp root)
-# disable the underline
-(( ${+ZSH_HIGHLIGHT_STYLES} )) || typeset -A ZSH_HIGHLIGHT_STYLES
-ZSH_HIGHLIGHT_STYLES[path]=none
-ZSH_HIGHLIGHT_STYLES[path_prefix]=none
 
 source $ZSH/oh-my-zsh.sh
 
@@ -111,78 +101,38 @@ source $ZSH/oh-my-zsh.sh
 # if [[ -n $SSH_CONNECTION ]]; then
 #   export EDITOR='vim'
 # else
-#   export EDITOR='mvim'
+#   export EDITOR='nvim'
 # fi
 
 # Compilation flags
-# export ARCHFLAGS="-arch x86_64"
+# export ARCHFLAGS="-arch $(uname -m)"
 
-# Set personal aliases, overriding those provided by oh-my-zsh libs,
-# plugins, and themes. Aliases can be placed here, though oh-my-zsh
-# users are encouraged to define aliases within the ZSH_CUSTOM folder.
+# Set personal aliases, overriding those provided by Oh My Zsh libs,
+# plugins, and themes. Aliases can be placed here, though Oh My Zsh
+# users are encouraged to define aliases within a top-level file in
+# the $ZSH_CUSTOM folder, with .zsh extension. Examples:
+# - $ZSH_CUSTOM/aliases.zsh
+# - $ZSH_CUSTOM/macos.zsh
 # For a full list of active aliases, run `alias`.
 #
 # Example aliases
-# alias zshconfig="mate ~/.zshrc"
-# alias ohmyzsh="mate ~/.oh-my-zsh"
+alias zshconfig="source ~/.zshrc"
+# alias ohmyzsh="sour ~/.oh-my-zsh"
 alias vim="nvim"
-alias ll="exa -snew -lbF --git --icons"
 
-# alias vi="nvim"
-
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/home/harvey/anaconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "/home/harvey/anaconda3/etc/profile.d/conda.sh" ]; then
-        . "/home/harvey/anaconda3/etc/profile.d/conda.sh"
-    else
-        export PATH="/home/harvey/anaconda3/bin:$PATH"
-    fi
-fi
-unset __conda_setup
-# <<< conda initialize <<<
-
-# >>> CUDA Environment Setup >>>
-# https://github.com/NVIDIA/nccl/issues/131
-export PATH=${PATH}:"/usr/local/cuda/bin"
-export CPATH=${CPATH}:"/usr/local/cuda/targets/x86_64-linux/include/"
-export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:"/usr/local/cuda/lib64/"
-
-# PATH must be appended to the new version fo ncu execution path
-export PATH="/usr/local/NVIDIA-Nsight-Compute":${PATH}
-export PATH=${PATH}:"/opt/nvidia/nsight-systems/2024.1.1/bin/"
-
-export PATH=${PATH}:"/home/harvey/packages/TensorRT-8.5.1.7/bin"
-export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:"/home/harvey/packages/TensorRT-8.5.1.7/lib"
-# <<< CUDA Environment Setup <<<
+# alias for eza
+alias ls='eza $eza_params'
+alias l='eza --git-ignore $eza_params'
+alias ll='eza --all --header --long $eza_params'
+alias llm='eza --all --header --long --sort=modified $eza_params'
+alias la='eza -lbhHigUmuSa'
+alias lx='eza -lbhHigUmuSa@'
+alias lt='eza --tree $eza_params'
+alias tree='eza --tree $eza_params'
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
+source ~/powerlevel10k/powerlevel10k.zsh-theme
+
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-export FZF_DEFAULT_COMMAND='rg --files'
-
-export PATH=${PATH}:"/opt/cfw/"
-export PATH=${PATH}:"/opt/Telegram/"
-export PATH=${PATH}:"/home/harvey/.local/bin"
-
-# >>> ros2 Humble initialize >>>
-# Replace ".bash" with your shell if you're not using bash
-# Possible values are: setup.bash, setup.sh, setup.zsh
-source /opt/ros/humble/setup.zsh
-# <<< ros2 Humble initialize <<<
-
-# >>> opencv4  >>>
-export PKG_CONFIG_PATH=${PKG_CONFIG_PATH}:"/usr/local/lib/pkgconfig"
-# <<< opencv4  <<<
-
-# >>> proxy >>>
-# export HTTP_PROXY="http://$USERNAME:$PASSWORD@$PROXY_SERVER:$PROXY_PORT"
-# export HTTP_PROXY="127.0.0.1:7890"
-# export HTTPS_PROXY=$HTTP_PROXY
-# export FTP_PROXY=$HTTP_PROXY
-# export SOCKS_PROXY=$HTTP_PROXY
-# <<< proxy <<<
