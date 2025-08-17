@@ -17,7 +17,7 @@ return
 		providers = {
 		  ollama = {
 			endpoint = "http://localhost:11434",
-			model = "qwen2.5-coder:latest",
+			model = "qwen2.5-coder:7b",
 		  },
 		}
 		-- add any opts here

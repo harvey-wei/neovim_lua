@@ -86,7 +86,7 @@ plugins=(
     zsh-autosuggestions
     zsh-syntax-highlighting
     k
-    zsh-exa
+    zsh-eza
     zsh-peco-history
 	z
 )
@@ -126,20 +126,28 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 alias vim="nvim"
-alias ll="exa -snew -lbF --git --icons"
+
+alias ls='eza $eza_params'
+# alias l='eza --git-ignore $eza_params'
+alias ll='eza --all --header --long $eza_params'
+alias llm='eza --all --header --long --sort=modified $eza_params'
+alias la='eza -lbhHigUmuSa'
+alias lx='eza -lbhHigUmuSa@'
+alias lt='eza --tree $eza_params'
+alias tree='eza --tree $eza_params'
 
 # alias vi="nvim"
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/home/harvey/anaconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+__conda_setup="$('/home/harveyai/anaconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
 if [ $? -eq 0 ]; then
     eval "$__conda_setup"
 else
-    if [ -f "/home/harvey/anaconda3/etc/profile.d/conda.sh" ]; then
-        . "/home/harvey/anaconda3/etc/profile.d/conda.sh"
+    if [ -f "/home/harveyai/anaconda3/etc/profile.d/conda.sh" ]; then
+        . "/home/harveyai/anaconda3/etc/profile.d/conda.sh"
     else
-        export PATH="/home/harvey/anaconda3/bin:$PATH"
+        export PATH="/home/harveyai/anaconda3/bin:$PATH"
     fi
 fi
 unset __conda_setup
@@ -172,7 +180,7 @@ export PATH=${PATH}:"/home/harvey/.local/bin"
 # >>> ros2 Humble initialize >>>
 # Replace ".bash" with your shell if you're not using bash
 # Possible values are: setup.bash, setup.sh, setup.zsh
-source /opt/ros/humble/setup.zsh
+# source /opt/ros/humble/setup.zsh
 # <<< ros2 Humble initialize <<<
 
 # >>> opencv4  >>>
