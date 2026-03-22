@@ -13,23 +13,23 @@ return
   },
 
   keys = {
-    { "<leader>x",  group = "Debugger", nowait = true, remap = false },
+    { "<leader>d",  group = "Debugger", nowait = true, remap = false },
 
-    { "<leader>xt", function() require("dap").toggle_breakpoint() end, desc = "Toggle Breakpoint", mode = "n" },
-    { "<leader>xc", function() require("dap").continue()          end, desc = "Continue",          mode = "n" },
-    { "<leader>xi", function() require("dap").step_into()         end, desc = "Step Into",         mode = "n" },
-    { "<leader>xo", function() require("dap").step_over()         end, desc = "Step Over",         mode = "n" },
-    { "<leader>xu", function() require("dap").step_out()          end, desc = "Step Out",          mode = "n" },
+    { "<leader>dt", function() require("dap").toggle_breakpoint() end, desc = "Toggle Breakpoint", mode = "n" },
+    { "<leader>dc", function() require("dap").continue()          end, desc = "Continue",          mode = "n" },
+    { "<leader>di", function() require("dap").step_into()         end, desc = "Step Into",         mode = "n" },
+    { "<leader>do", function() require("dap").step_over()         end, desc = "Step Over",         mode = "n" },
+    { "<leader>du", function() require("dap").step_out()          end, desc = "Step Out",          mode = "n" },
 
-    { "<leader>xr", function() require("dap").repl.toggle()       end, desc = "Toggle REPL",       mode = "n" },
-    { "<leader>xl", function() require("dap").run_last()          end, desc = "Run Last",          mode = "n" },
+    { "<leader>dr", function() require("dap").repl.toggle()       end, desc = "Toggle REPL",       mode = "n" },
+    { "<leader>dl", function() require("dap").run_last()          end, desc = "Run Last",          mode = "n" },
 
-    { "<leader>xb", function() require("dap").list_breakpoints()  end, desc = "List Breakpoints",  mode = "n" },
-    { "<leader>xe", function() require("dap").set_exception_breakpoints({ "all" }) end, desc = "Set Exception Breakpoints", mode = "n" },
+    { "<leader>db", function() require("dap").list_breakpoints()  end, desc = "List Breakpoints",  mode = "n" },
+    { "<leader>de", function() require("dap").set_exception_breakpoints({ "all" }) end, desc = "Set Exception Breakpoints", mode = "n" },
 
-    { "<leader>xh", function() require("dap.ui.widgets").hover()  end, desc = "Evaluate (Hover)",  mode = "n" },
+    { "<leader>dh", function() require("dap.ui.widgets").hover()  end, desc = "Evaluate (Hover)",  mode = "n" },
 
-    { "<leader>xq", function()
+    { "<leader>dq", function()
         local dap, dapui, vt = require("dap"), require("dapui"), require("nvim-dap-virtual-text")
         pcall(dap.terminate)
         pcall(dapui.close)
@@ -122,21 +122,53 @@ return
     -- 6) Python setup
     local mason_debugpy = vim.fn.expand("~/.local/share/nvim/mason/packages/debugpy/venv/bin/python")
     local python_for_debugpy = pick_project_python() or mason_debugpy
-    require('dap-python').setup(python_for_debugpy) -- will register python adapter and default configs
-    -- require('dap-python').test_runner = 'pytest' -- optional
-	-- dap.configurations.python = {}
+    require('dap-python').setup(python_for_debugpy)
 
-    -- 5) Share configs with VS Code
-	-- local type_map = {
-	--   python = { "python" },   -- "python" in VS Code → dap.adapters.python
-	--   go     = { "delve" },    -- "go" → dap.adapters.delve
-	--   cppdbg = { "codelldb" }, -- "cppdbg" (VS Code) → dap.adapters.codelldb
-	--   cpp    = { "codelldb" }, -- "cpp" → dap.adapters.codelldb
-	-- }
+    local function get_python_path()
+      return pick_project_python() or python_for_debugpy
+    end
 
-    -- pcall(function() require('dap.ext.vscode').load_launchjs(nil, type_map) end)
-	-- require('dap.ext.vscode').load_launchjs(nil, type_map)
+    local function load_project_dap()
+      local base = {
+        {
+          type = "python",
+          request = "launch",
+          name = "Debug: Current File",
+          program = "${file}",
+          pythonPath = get_python_path,
+          justMyCode = false,
+        },
+        {
+          type = "python",
+          request = "launch",
+          name = "Debug: Project Entry",
+          program = function()
+            return vim.fn.input("Entry script: ", vim.fn.getcwd() .. "/", "file")
+          end,
+          args = function()
+            local input = vim.fn.input("Args (space-separated): ")
+            if input == "" then return {} end
+            return vim.split(input, " ")
+          end,
+          pythonPath = get_python_path,
+          justMyCode = false,
+        },
+      }
+      local dap_file = vim.fn.getcwd() .. "/.dap.lua"
+      if vim.fn.filereadable(dap_file) == 1 then
+        local project_configs = dofile(dap_file)
+        for _, cfg in ipairs(project_configs) do
+          table.insert(base, cfg)
+        end
+      end
+      dap.configurations.python = base
+    end
 
-	-- De-dupe: keep first occurrence of same (name,type,program,request)
+    load_project_dap()
+
+    vim.api.nvim_create_autocmd("DirChanged", {
+      callback = load_project_dap,
+      desc = "Reload DAP python configs on directory change",
+    })
 end
 }

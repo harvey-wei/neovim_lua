@@ -194,3 +194,8 @@ export PKG_CONFIG_PATH=${PKG_CONFIG_PATH}:"/usr/local/lib/pkgconfig"
 # export FTP_PROXY=$HTTP_PROXY
 # export SOCKS_PROXY=$HTTP_PROXY
 # <<< proxy <<<
+
+. "$HOME/.local/bin/env"
+
+# opencode
+export PATH=/home/harveyai/.opencode/bin:$PATH

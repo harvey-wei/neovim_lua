@@ -1,7 +1,0 @@
-return {
-	"HiPhish/rainbow-delimiters.nvim",
-	-- This ensures  setup runs before a buffer is fully read.
-	lazy = false,
-	config = function ()
-	end,
-}

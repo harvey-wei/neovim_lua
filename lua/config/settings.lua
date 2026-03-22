@@ -4,7 +4,7 @@ function  M.setup()
 	vim.opt.number = true
     vim.opt.tabstop = 4
     vim.opt.shiftwidth = 4
-    vim.expandtab = true
+    vim.opt.expandtab = true
     vim.opt.smartindent = true
     vim.opt.ignorecase = true
     vim.opt.smartcase = true
@@ -19,9 +19,9 @@ function  M.setup()
 
 	-- limit the text width
 	vim.cmd([[
-		autocmd VimEnter * set textwidth=100 formatoptions+=t
+		autocmd VimEnter * set textwidth=120 formatoptions+=t
 		set cinkeys-=:
-		set colorcolumn=100
+		set colorcolumn=120
 	]])
 
 	vim.cmd([[ set shell=zsh]])

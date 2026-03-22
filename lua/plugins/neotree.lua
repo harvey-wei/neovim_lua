@@ -19,10 +19,10 @@ return {
 	vim.keymap.set("n", "<leader>fe", "<cmd>Neotree filesystem reveal left<CR>", { desc = "Filesystem Explorer" })
 
 	-- Show buffers in Neo-tree
-	vim.keymap.set("n", "<leader>fb", "<cmd>Neotree buffers reveal float<CR>", { desc = "Buffer Explorer" })
+	vim.keymap.set("n", "<leader>eb", "<cmd>Neotree buffers reveal float<CR>", { desc = "Buffer Explorer" })
 
 	-- Show git status in Neo-tree
-	vim.keymap.set("n", "<leader>fg", "<cmd>Neotree git_status reveal float<CR>", { desc = "Git Explorer" })
+	vim.keymap.set("n", "<leader>eg", "<cmd>Neotree git_status reveal float<CR>", { desc = "Git Explorer" })
 
 	end
   },
